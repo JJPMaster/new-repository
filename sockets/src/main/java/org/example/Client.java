@@ -2,11 +2,12 @@ package org.example;
 
 import java.io.*;
 import java.net.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
-        String hostname = "localhost";
+        String hostname = "10.9.16.43";
         int port = 1234;
 
         try (Socket socket = new Socket(hostname, port)) {
@@ -18,15 +19,21 @@ public class Client {
             System.out.println(serverResponse);
 
             while (true) {
-                System.out.print("Enter your guess: ");
-                int guess = scanner.nextInt();
-                writer.println(guess);
+                try {
+                    System.out.print("Enter your guess: ");
+                    int guess = scanner.nextInt();
+                    writer.println(guess);
 
-                serverResponse = reader.readLine();
-                System.out.println(serverResponse);
+                    serverResponse = reader.readLine();
+                    System.out.println(serverResponse);
 
-                if (serverResponse.equalsIgnoreCase("Correct!")) {
-                    break;
+                    if (serverResponse.equalsIgnoreCase("Correct!")) {
+                        break;
+                    }
+                }
+                catch (InputMismatchException ex) {
+                    System.out.println("oh no");
+                    continue;
                 }
             }
 
